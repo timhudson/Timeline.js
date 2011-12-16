@@ -22,7 +22,7 @@ Next add the animation to the timeline
 timeline.add(animation);
 ```
 
-Then run that baby. Pass in a value between 0 and 1 and timeline will run all functions, letting each one know where their playback should be.
+Then run that baby. Pass in a value between 0 and 1 and timeline will run all callbacks, letting each one know where their playback should be.
 
 ```js
 timeline.run(0.73);
