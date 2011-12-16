@@ -18,9 +18,11 @@
   };
 
   timeline.remove = function(animation) {
+
+    var index = cache.indexOf(animation);
     
-    if (cache.indexOf(animation) !== 1) {
-      cache.splice(animation);
+    if (index !== -1) {
+      cache.splice(index, 1);
     }
 
     return this;
