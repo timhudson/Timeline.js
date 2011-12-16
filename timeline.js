@@ -3,62 +3,62 @@
 //    Timeline.js may be freely distributed under the MIT license.
 
 (function(context) {
-	
-	var cache = [];
+  
+  var cache = [];
 
-	var timeline = {};
+  var timeline = {};
 
-	// Add animation object which requires start, stop and callback { start: 0, stop: 0.4, callback: function() {} }
-	timeline.add = function(animation) {
+  // Add animation object which requires start, stop and callback { start: 0, stop: 0.4, callback: function() {} }
+  timeline.add = function(animation) {
 
-		// Cache of all animations
-		cache.push(animation);
+    // Cache of all animations
+    cache.push(animation);
 
-		return this;
-	};
+    return this;
+  };
 
-	timeline.remove = function(animation) {
-		
-		if (cache.indexOf(animation) !== 1) {
-			cache.splice(animation);
-		}
+  timeline.remove = function(animation) {
+    
+    if (cache.indexOf(animation) !== 1) {
+      cache.splice(animation);
+    }
 
-		return this;
-	};
+    return this;
+  };
 
-	timeline.run = function(time) {
+  timeline.run = function(time) {
 
-		function animate() {			
-			var l = cache.length;
+    function animate() {      
+      var l = cache.length;
 
-			for(var i = 0; i < l; i++) {
-				var animation = cache[i];
+      for(var i = 0; i < l; i++) {
+        var animation = cache[i];
 
-				if (time > animation.start && time < animation.stop) {
-					animation.callback(relativePosition(animation.start, animation.stop));
-				}
-				else if (time >= animation.stop) {
-					animation.callback(1);
-				}
-				else {
-					animation.callback(0);
-				}
-			}
-		}
+        if (time > animation.start && time < animation.stop) {
+          animation.callback(relativePosition(animation.start, animation.stop));
+        }
+        else if (time >= animation.stop) {
+          animation.callback(1);
+        }
+        else {
+          animation.callback(0);
+        }
+      }
+    }
 
-		function relativePosition(start, stop) {
-			var length = stop*100000 - start*100000,
-				position = time*100000 - start*100000;
-			
-			return position / length;
-		}
+    function relativePosition(start, stop) {
+      var length = stop*100000 - start*100000,
+        position = time*100000 - start*100000;
+      
+      return position / length;
+    }
 
-		animate();
+    animate();
 
-		return this;
+    return this;
 
-	};
+  };
 
-	context.timeline = timeline;
+  context.timeline = timeline;
 
 }(this));
