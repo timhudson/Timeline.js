@@ -49,8 +49,8 @@
     }
 
     function relativePosition(start, stop) {
-      var length = stop*100000 - start*100000,
-        position = time*100000 - start*100000;
+      var length = stop - start,
+        position = time - start;
       
       return position / length;
     }
