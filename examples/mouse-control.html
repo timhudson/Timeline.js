@@ -10,7 +10,6 @@
   body {
     overflow: hidden;
     background: #00aaef url(images/texture.png);
-
   }
   body::after {
     content: '';
@@ -64,10 +63,10 @@
 
         $h1.css({
           '-webkit-transform': 'scale(' +scale+') skew(0, '+skew+'deg)',
-          '-moz-transform': 'scale(' + scale + ') skew('+skew+'deg, 0)',
-          '-o-transform': 'scale(' + scale + ') skew('+skew+'deg, 0)',
-          '-ms-transform': 'scale(' + scale + ') skew('+skew+'deg, 0)',
-          'transform': 'scale(' + scale + ') skew('+skew+'deg, 0)'
+          '-moz-transform': 'scale(' + scale + ') skew(0, '+skew+'deg)',
+          '-o-transform': 'scale(' + scale + ') skew(0, '+skew+'deg)',
+          '-ms-transform': 'scale(' + scale + ') skew(0, '+skew+'deg)',
+          'transform': 'scale(' + scale + ') skew(0, '+skew+'deg)'
         });
 
       }
@@ -92,7 +91,7 @@
 
     var $window = $(window);
 
-    $window.mousemove(function() {
+    $window.mousemove(function(event) {
       var time = event.pageX / $window.width();
       timeline.run(time);
     })
