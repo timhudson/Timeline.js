@@ -3,7 +3,7 @@
 //    Timeline.js may be freely distributed under the MIT license.
 
 (function(context) {
-  
+
   var cache = [];
 
   var timeline = {};
@@ -20,7 +20,7 @@
   timeline.remove = function(animation) {
 
     var index = cache.indexOf(animation);
-    
+
     if (index !== -1) {
       cache.splice(index, 1);
     }
@@ -30,29 +30,35 @@
 
   timeline.run = function(time) {
 
-    function animate() {      
+    function animate() {
+
       var l = cache.length;
 
       for(var i = 0; i < l; i++) {
-        var animation = cache[i];
 
-        if (time > animation.start && time < animation.stop) {
-          animation.callback(relativePosition(animation.start, animation.stop));
-        }
-        else if (time >= animation.stop) {
-          animation.callback(1);
-        }
-        else {
-          animation.callback(0);
-        }
+        var animation = cache[i],
+            _relativeTime = relativeTime(animation.start, animation.stop),
+            repeat = animation.previousTime === _relativeTime;
+
+        // Run animation if not a repeat of last update
+        if (!repeat) animation.callback(_relativeTime);
+
+        // Cache previous time
+        animation.previousTime = _relativeTime;
       }
+
+      return this;
     }
 
-    function relativePosition(start, stop) {
+    function relativeTime(start, stop) {
       var length = stop - start,
-        position = time - start;
-      
-      return position / length;
+          position = time - start,
+          _relativeTime = position / length;
+
+      ret = _relativeTime >= 1 ? 1 :
+            _relativeTime <= 0 ? 0 : _relativeTime;
+
+      return ret;
     }
 
     animate();
