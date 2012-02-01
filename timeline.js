@@ -28,7 +28,7 @@
     return this;
   };
 
-  timeline.run = function(time) {
+  timeline.run = function(value) {
 
     function animate() {
 
@@ -37,14 +37,15 @@
       for(var i = 0; i < l; i++) {
 
         var animation = cache[i],
-            _relativeTime = relativeTime(animation.start, animation.stop),
-            repeat = animation.previousTime === _relativeTime;
+            _time = relativeTime(animation.start, animation.stop),
+            _values = relativeValues(animation, _time);
+            repeat = animation.previousTime === _time;
 
         // Run animation if not a repeat of last update
-        if (!repeat) animation.callback(_relativeTime);
+        if (!repeat) animation.callback(_values, _time);
 
         // Cache previous time
-        animation.previousTime = _relativeTime;
+        animation.previousTime = _time;
       }
 
       return this;
@@ -52,11 +53,27 @@
 
     function relativeTime(start, stop) {
       var length = stop - start,
-          position = time - start,
-          _relativeTime = position / length;
+          position = value - start,
+          _time = position / length;
 
-      ret = _relativeTime >= 1 ? 1 :
-            _relativeTime <= 0 ? 0 : _relativeTime;
+      ret = _time >= 1 ? 1 :
+            _time <= 0 ? 0 : _time;
+
+      return ret;
+    }
+
+    function relativeValues(animation, relativeTime) {
+
+      var animationFrom = animation['from'],
+          animationTo = animation['to'];
+
+      var ret = {};
+
+      for ( var key in animation['to'] ) {
+
+        ret[key] = (( animationTo[key] - animationFrom[key]) * relativeTime ) + animationFrom[key];
+
+      }
 
       return ret;
     }

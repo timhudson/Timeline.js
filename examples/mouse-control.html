@@ -16,8 +16,8 @@
     position: absolute;
     top: 0; right: 0; bottom: 0; left: 0;
     -webkit-box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.3);
-    -moz-box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.3);
-    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.3);
+    -webkit-transform: translate3d(0,0,0); /* for hardware acceleration */
+    -moz-transform: translate3d(0,0,0); /* for hardware acceleration */
   }
   
   h1 {
@@ -30,6 +30,8 @@
     position: absolute;
     top: 50%; left: 50%;
     color: #f7f7f7;
+    -webkit-transform: translate3d(0,0,0); /* for hardware acceleration */
+    -moz-transform: translate3d(0,0,0); /* for hardware acceleration */
   }
   p {
     width: 100%;
@@ -46,6 +48,7 @@
   <p>Timeline based animation. This example shows controlling playback by horizontal mouse movement.</p>
 
   <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+  <script src="js/requestAnimationFrame.js"></script>
   <script src="../timeline.js"></script>
   <script>
     
@@ -55,18 +58,22 @@
     var animation = {
       start: 0,
       stop: 1,
-      callback: function(relativeTime) {
-
-        // Values to animate
-        var scale = (10 * relativeTime) + 1,
-            skew = (10 * relativeTime) + 1;
+      from: {
+        'scale': 1,
+        'skew': 1
+      },
+      to: {
+        'scale': 7,
+        'skew': 10
+      },
+      callback: function(values) {
 
         $h1.css({
-          '-webkit-transform': 'scale(' +scale+') skew(0, '+skew+'deg)',
-          '-moz-transform': 'scale(' + scale + ') skew(0, '+skew+'deg)',
-          '-o-transform': 'scale(' + scale + ') skew(0, '+skew+'deg)',
-          '-ms-transform': 'scale(' + scale + ') skew(0, '+skew+'deg)',
-          'transform': 'scale(' + scale + ') skew(0, '+skew+'deg)'
+          '-webkit-transform': 'scale(' +values.scale+') skew(0, '+values.skew+'deg)',
+          '-moz-transform': 'scale(' + values.scale + ') skew(0, '+values.skew+'deg)',
+          '-o-transform': 'scale(' + values.scale + ') skew(0, '+values.skew+'deg)',
+          '-ms-transform': 'scale(' + values.scale + ') skew(0, '+values.skew+'deg)',
+          'transform': 'scale(' + values.scale + ') skew(0, '+values.skew+'deg)'
         });
 
       }
@@ -75,13 +82,16 @@
     var another_animation = {
       start: 0,
       stop: 1,
-      callback: function(relativeTime) {
-        
-        // Value to animate
-        var position = 500 * relativeTime;
+      from: {
+        'position': 0
+      },
+      to: {
+        'position': 500
+      },
+      callback: function(values) {
 
         $('body').css({
-          'backgroundPosition': '0 '+position+'px'
+          'backgroundPosition': '0 '+values.position+'px'
         });
 
       }
@@ -89,12 +99,20 @@
 
     timeline.add(animation).add(another_animation);
 
+    var currentTime = 0, newTime = 0;
     var $window = $(window);
 
     $window.mousemove(function(event) {
-      var time = event.pageX / $window.width();
-      timeline.run(time);
+      newTime = event.pageX / $window.width();
     })
+
+    var animate = function() {
+      requestAnimationFrame(animate);
+      currentTime += (newTime - currentTime) * .1;
+      timeline.run(currentTime);
+    }
+
+    animate();
 
   </script>
 
