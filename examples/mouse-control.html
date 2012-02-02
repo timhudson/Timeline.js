@@ -20,11 +20,11 @@
   }
   
   h1 {
-    width: 300px;
+    width: 900px;
     height: 40px;
-    margin: -20px 0 0 -150px;
+    margin: -20px 0 0 -450px;
     line-height: 40px;
-    font-size: 40px;
+    font-size: 80px;
     text-align: center;
     position: absolute;
     top: 50%; left: 50%;
@@ -45,34 +45,27 @@
   <h1>Timeline.js</h1>
   <p>Timeline based animation. This example shows controlling playback by horizontal mouse movement.</p>
 
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
   <script src="js/requestAnimationFrame.js"></script>
   <script src="../timeline.js"></script>
   <script>
     
-    var $h1 = $('h1');
+    var $window = $(window),
+        $h1 = $('h1');
 
     // Timeline events require start, stop and callback
     var animation = {
       start: 0,
       stop: 1,
       from: {
-        'scale': 1,
-        'skew': 1
+        'top': 70
       },
       to: {
-        'scale': 7,
-        'skew': 10
+        'top': 30
       },
       callback: function(time, values) {
 
-        $h1.css({
-          '-webkit-transform': 'scale(' +values.scale+') skew(0, '+values.skew+'deg)',
-          '-moz-transform': 'scale(' + values.scale + ') skew(0, '+values.skew+'deg)',
-          '-o-transform': 'scale(' + values.scale + ') skew(0, '+values.skew+'deg)',
-          '-ms-transform': 'scale(' + values.scale + ') skew(0, '+values.skew+'deg)',
-          'transform': 'scale(' + values.scale + ') skew(0, '+values.skew+'deg)'
-        });
+        $h1.css('top', values.top+'%');
 
       }
     };
@@ -89,7 +82,7 @@
       callback: function(time, values) {
 
         $('body').css({
-          'backgroundPosition': '0 '+values.position+'px'
+          'backgroundPosition': '0 '+(-values.position)+'px'
         });
 
       }
@@ -97,20 +90,10 @@
 
     timeline.add(animation).add(another_animation);
 
-    var currentTime = 0, newTime = 0;
-    var $window = $(window);
-
     $window.mousemove(function(event) {
-      newTime = event.pageX / $window.width();
+      newTime = event.pageY / $window.height();
+      timeline.update(newTime);
     })
-
-    var animate = function() {
-      requestAnimationFrame(animate);
-      currentTime += (newTime - currentTime) * .25;
-      timeline.update(currentTime);
-    }
-
-    animate();
 
   </script>
 
