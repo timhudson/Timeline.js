@@ -35,45 +35,47 @@
       for(var i = 0, l = cache.length; i < l; i++) {
 
         var animation = cache[i],
-            _time = relativeTime(animation.start, animation.stop),
-            _values = relativeValues(animation, _time);
-            repeat = animation.previousTime === _time;
+            _time = time(animation['start'], animation['stop']),
+            repeat = animation.previousTime === _time,
+            _values;
 
-        // Run animation if not a repeat of last update
-        if (!repeat) animation.callback(_values, _time);
+        if (!repeat) {
+
+          // Create relative values with the 'from' and 'to' objects
+          if (animation['to']) _values = values(animation, _time);
+
+          // Run animation if not a repeat of last update
+          animation.callback(_time, _values);
+
+        }
 
         // Cache previous time
         animation.previousTime = _time;
+
       }
 
-      return this;
     }
 
-    function relativeTime(start, stop) {
-      var length = stop - start,
-          position = value - start,
-          _time = position / length;
+    function time(start, stop) {
+      var _time = (value - start) / (stop - start);
 
-      ret = _time >= 1 ? 1 :
+      _time = _time >= 1 ? 1 :
             _time <= 0 ? 0 : _time;
 
-      return ret;
+      return _time;
     }
 
-    function relativeValues(animation, relativeTime) {
+    function values(animation, time) {
 
       var animationFrom = animation['from'],
-          animationTo = animation['to'];
-
-      var ret = {};
+          animationTo = animation['to'],
+          _values = {};
 
       for ( var key in animation['to'] ) {
-
-        ret[key] = (( animationTo[key] - animationFrom[key]) * relativeTime ) + animationFrom[key];
-
+        _values[key] = ( (animationTo[key] - animationFrom[key]) * time ) + animationFrom[key];
       }
 
-      return ret;
+      return _values;
     }
 
     animate();

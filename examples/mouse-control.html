@@ -66,7 +66,7 @@
         'scale': 7,
         'skew': 10
       },
-      callback: function(values) {
+      callback: function(time, values) {
 
         $h1.css({
           '-webkit-transform': 'scale(' +values.scale+') skew(0, '+values.skew+'deg)',
@@ -88,7 +88,7 @@
       to: {
         'position': 500
       },
-      callback: function(values) {
+      callback: function(time, values) {
 
         $('body').css({
           'backgroundPosition': '0 '+values.position+'px'
@@ -108,7 +108,7 @@
 
     var animate = function() {
       requestAnimationFrame(animate);
-      currentTime += (newTime - currentTime) * .1;
+      currentTime += (newTime - currentTime) * .25;
       timeline.run(currentTime);
     }
 
