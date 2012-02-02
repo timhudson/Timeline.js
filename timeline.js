@@ -32,9 +32,7 @@
 
     function animate() {
 
-      var l = cache.length;
-
-      for(var i = 0; i < l; i++) {
+      for(var i = 0, l = cache.length; i < l; i++) {
 
         var animation = cache[i],
             _time = relativeTime(animation.start, animation.stop),
