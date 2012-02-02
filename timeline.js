@@ -28,37 +28,54 @@
     return this;
   };
 
-  timeline.run = function(time) {
+  timeline.update = function(value) {
 
     function animate() {
 
-      var l = cache.length;
-
-      for(var i = 0; i < l; i++) {
+      for(var i = 0, l = cache.length; i < l; i++) {
 
         var animation = cache[i],
-            _relativeTime = relativeTime(animation.start, animation.stop),
-            repeat = animation.previousTime === _relativeTime;
+            _time = time(animation['start'], animation['stop']),
+            repeat = animation.previousTime === _time,
+            _values;
 
-        // Run animation if not a repeat of last update
-        if (!repeat) animation.callback(_relativeTime);
+        if (!repeat) {
+
+          // Create relative values with the 'from' and 'to' objects
+          if (animation['to']) _values = values(animation, _time);
+
+          // Run animation if not a repeat of last update
+          animation.callback(_time, _values);
+
+        }
 
         // Cache previous time
-        animation.previousTime = _relativeTime;
+        animation.previousTime = _time;
+
       }
 
-      return this;
     }
 
-    function relativeTime(start, stop) {
-      var length = stop - start,
-          position = time - start,
-          _relativeTime = position / length;
+    function time(start, stop) {
+      var _time = (value - start) / (stop - start);
 
-      ret = _relativeTime >= 1 ? 1 :
-            _relativeTime <= 0 ? 0 : _relativeTime;
+      _time = _time >= 1 ? 1 :
+            _time <= 0 ? 0 : _time;
 
-      return ret;
+      return _time;
+    }
+
+    function values(animation, time) {
+
+      var animationFrom = animation['from'],
+          animationTo = animation['to'],
+          _values = {};
+
+      for ( var key in animation['to'] ) {
+        _values[key] = ( (animationTo[key] - animationFrom[key]) * time ) + animationFrom[key];
+      }
+
+      return _values;
     }
 
     animate();
