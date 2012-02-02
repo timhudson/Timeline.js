@@ -28,7 +28,7 @@
     return this;
   };
 
-  timeline.run = function(value) {
+  timeline.update = function(value) {
 
     function animate() {
 

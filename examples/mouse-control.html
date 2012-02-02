@@ -109,7 +109,7 @@
     var animate = function() {
       requestAnimationFrame(animate);
       currentTime += (newTime - currentTime) * .25;
-      timeline.run(currentTime);
+      timeline.update(currentTime);
     }
 
     animate();
